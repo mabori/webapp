@@ -227,7 +227,7 @@ body {
 
 #video {
     width: 100%;
-    height: calc(100% - 170px - env(safe-area-inset-bottom, 0px) - env(safe-area-inset-top, 0px));
+    height: calc(100% - 180px - env(safe-area-inset-bottom, 0px) - env(safe-area-inset-top, 0px));
     object-fit: cover;
     position: absolute;
     top: env(safe-area-inset-top, 0px);
@@ -299,18 +299,24 @@ body {
     gap: 10px;
     max-width: calc(100% - 40px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
     overflow-x: auto;
+    overflow-y: hidden;
     z-index: 10;
     height: 60px;
     align-items: center;
+    padding-top: 10px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
 }
 
 .photo-preview {
-    width: 60px;
     height: 60px;
+    min-width: 40px;
     border-radius: 8px;
-    object-fit: cover;
+    object-fit: contain;
     border: 2px solid white;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    background: rgba(0,0,0,0.3);
+    flex-shrink: 0;
 }
 
 /* Selection Screen */

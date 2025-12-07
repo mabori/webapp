@@ -51,7 +51,13 @@ function capturePhoto() {
         const reader = new FileReader();
         reader.onload = (e) => {
             const photoData = e.target.result;
-            state.currentPhotos.push(photoData);
+            const photoInfo = {
+                data: photoData,
+                width: canvas.width,
+                height: canvas.height,
+                aspectRatio: canvas.width / canvas.height
+            };
+            state.currentPhotos.push(photoInfo);
             updatePhotoPreview();
             
             if (state.currentPhotos.length > 0) {
@@ -66,12 +72,50 @@ function updatePhotoPreview() {
     const container = document.getElementById('photo-preview-container');
     container.innerHTML = '';
     
-    state.currentPhotos.forEach((photo, index) => {
+    state.currentPhotos.forEach((photoInfo, index) => {
         const img = document.createElement('img');
-        img.src = photo;
+        // Handle both old format (string) and new format (object)
+        img.src = typeof photoInfo === 'string' ? photoInfo : photoInfo.data;
         img.className = 'photo-preview';
+        
+        // Set aspect ratio if available
+        if (typeof photoInfo === 'object' && photoInfo.aspectRatio) {
+            const previewHeight = 60;
+            const previewWidth = previewHeight * photoInfo.aspectRatio;
+            img.style.width = previewWidth + 'px';
+            img.style.height = previewHeight + 'px';
+        } else if (typeof photoInfo === 'string') {
+            // For old format, load image to get aspect ratio
+            const tempImg = new Image();
+            tempImg.onload = function() {
+                const aspectRatio = this.width / this.height;
+                const previewHeight = 60;
+                const previewWidth = previewHeight * aspectRatio;
+                img.style.width = previewWidth + 'px';
+                img.style.height = previewHeight + 'px';
+                scrollToLatest();
+            };
+            tempImg.src = photoInfo;
+        }
+        
         container.appendChild(img);
     });
+    
+    // Auto-scroll to the newest photo
+    scrollToLatest();
+}
+
+function scrollToLatest() {
+    const container = document.getElementById('photo-preview-container');
+    // Use setTimeout to ensure DOM is updated
+    setTimeout(() => {
+        if (container.scrollWidth > container.clientWidth) {
+            container.scrollTo({
+                left: container.scrollWidth - container.clientWidth,
+                behavior: 'smooth'
+            });
+        }
+    }, 50);
 }
 
 function finishSession() {
@@ -85,8 +129,13 @@ function finishSession() {
         return;
     }
     
+    // Convert photo objects to data strings for storage
+    const photosForStorage = state.currentPhotos.map(photoInfo => {
+        return typeof photoInfo === 'string' ? photoInfo : photoInfo.data;
+    });
+    
     // Save photos to localStorage and navigate to selection page
-    localStorage.setItem('currentPhotos', JSON.stringify(state.currentPhotos));
+    localStorage.setItem('currentPhotos', JSON.stringify(photosForStorage));
     window.location.href = 'selection.html';
 }
 
