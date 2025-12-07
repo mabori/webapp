@@ -24,16 +24,16 @@
     <!-- Camera Screen -->
     <div id="camera-screen" class="screen">
         <div class="camera-header">
-            <button id="back-btn" class="back-button">← Zurück</button>
+            <button id="back-btn" class="back-button">×</button>
+            <button id="finish-session-btn" class="finish-button" style="display: none;">
+                <span class="check-icon">✓</span>
+            </button>
         </div>
         <video id="video" autoplay playsinline></video>
         <canvas id="canvas" style="display: none;"></canvas>
         <div class="camera-controls">
             <button id="capture-btn" class="capture-button">
                 <span class="camera-icon">📷</span>
-            </button>
-            <button id="finish-session-btn" class="finish-button" style="display: none;">
-                <span class="check-icon">✓</span>
             </button>
         </div>
         <div id="photo-preview-container" class="photo-preview-container"></div>
