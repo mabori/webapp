@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Fotos aufnehmen</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Camera Screen -->
+    <div id="camera-screen" class="screen active">
+        <div class="camera-header">
+            <button id="back-btn" class="back-button">×</button>
+            <button id="finish-session-btn" class="finish-button" style="display: none;">
+                <span class="check-icon">✓</span>
+            </button>
+        </div>
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <div class="camera-controls">
+            <button id="capture-btn" class="capture-button">
+                <span class="camera-icon">📷</span>
+            </button>
+        </div>
+        <div id="photo-preview-container" class="photo-preview-container"></div>
+    </div>
+
+    <script src="camera.js"></script>
+</body>
+</html>
+
