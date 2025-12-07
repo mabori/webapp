@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Ausgewählte Fotos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Overview Screen -->
+    <div id="overview-screen" class="screen active">
+        <div class="overview-header">
+            <h2>Ausgewählte Fotos</h2>
+            <button id="back-overview-btn" class="back-button">← Zurück</button>
+        </div>
+        <div id="overview-grid" class="overview-grid"></div>
+        <button id="create-album-btn" class="create-button">Album erstellen</button>
+    </div>
+
+    <!-- Name Popup -->
+    <div id="name-popup" class="popup-overlay">
+        <div class="popup-content">
+            <h3>Album benennen</h3>
+            <input type="text" id="album-name-input" placeholder="Album Name" maxlength="50">
+            <div class="location-info">
+                <p><strong>Ort:</strong> <span id="location-display">Wird ermittelt...</span></p>
+            </div>
+            <div class="popup-buttons">
+                <button id="cancel-name-btn" class="cancel-btn">Abbrechen</button>
+                <button id="confirm-name-btn" class="confirm-btn">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="overview.js"></script>
+</body>
+</html>
+
