@@ -245,13 +245,14 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 20px;
-    background: rgba(76, 175, 80, 0.9);
+    background: rgba(76, 175, 80, 0.15);
     border: 1px solid rgba(255,255,255,0.2);
-    color: white;
+    color: #ffffff;
     font-size: 1.5rem;
     cursor: pointer;
     backdrop-filter: blur(10px);
-    transition: background 0.2s, transform 0.1s;
+    transition: background 0.2s;
+    line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -259,7 +260,7 @@ body {
 }
 
 .finish-button:hover {
-    background: rgba(76, 175, 80, 1);
+    background: rgba(76, 175, 80, 0.25);
 }
 
 .finish-button:active {
