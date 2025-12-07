@@ -27,23 +27,13 @@ function checkExistingPermissions() {
                 updateCameraStatus('granted');
             })
             .catch(() => {
-                updateCameraStatus('denied');
+                updateCameraStatus('pending');
             });
     }
 
-    // Check location permission
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            () => {
-                permissions.location.granted = true;
-                updateLocationStatus('granted');
-            },
-            () => {
-                updateLocationStatus('denied');
-            },
-            { timeout: 1000 }
-        );
-    }
+    // Don't check location permission automatically on load
+    // User needs to explicitly request it
+    // Location permission check requires user interaction
 
     // Check orientation permission (iOS 13+)
     if (typeof DeviceOrientationEvent !== 'undefined') {
@@ -91,15 +81,29 @@ function requestLocationPermission() {
     
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-            () => {
+            (position) => {
                 permissions.location.granted = true;
                 updateLocationStatus('granted');
                 updateContinueButton();
             },
-            () => {
+            (error) => {
                 permissions.location.granted = false;
-                updateLocationStatus('denied');
+                console.error('Location permission error:', error);
+                
+                // Check specific error codes
+                if (error.code === error.PERMISSION_DENIED) {
+                    updateLocationStatus('denied');
+                } else if (error.code === error.POSITION_UNAVAILABLE) {
+                    updateLocationStatus('denied');
+                } else {
+                    updateLocationStatus('denied');
+                }
                 updateContinueButton();
+            },
+            {
+                enableHighAccuracy: false,
+                timeout: 10000,
+                maximumAge: 0
             }
         );
     } else {

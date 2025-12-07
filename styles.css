@@ -118,6 +118,7 @@ body {
     color: #888888;
     margin: 0;
     letter-spacing: 0.3px;
+    white-space: nowrap;
 }
 
 .albums-container {

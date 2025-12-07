@@ -23,13 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Check if we should show overview screen
 function checkForOverview() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('showOverview') === 'true') {
-        const saved = localStorage.getItem('selectedPhotos');
-        if (saved) {
-            state.selectedPhotos = JSON.parse(saved);
-            showOverviewScreen();
-        }
+    // Overview screen should not be shown on home page anymore
+    // It's now a separate page (overview.html)
+    // Hide overview screen if it exists
+    const overviewScreen = document.getElementById('overview-screen');
+    if (overviewScreen) {
+        overviewScreen.classList.remove('active');
     }
 }
 
