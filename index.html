@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Foto Diashow App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Home Screen -->
+    <div id="home-screen" class="screen active">
+        <h1>Foto Diashow</h1>
+        <button id="new-session-btn" class="add-button">
+            <span class="plus-icon">+</span>
+        </button>
+        <div id="albums-container" class="albums-container"></div>
+    </div>
+
+    <!-- Camera Screen -->
+    <div id="camera-screen" class="screen">
+        <div class="camera-header">
+            <button id="back-btn" class="back-button">← Zurück</button>
+        </div>
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <div class="camera-controls">
+            <button id="capture-btn" class="capture-button">
+                <span class="camera-icon">📷</span>
+            </button>
+            <button id="finish-session-btn" class="finish-button" style="display: none;">
+                <span class="check-icon">✓</span>
+            </button>
+        </div>
+        <div id="photo-preview-container" class="photo-preview-container"></div>
+    </div>
+
+    <!-- Selection Screen -->
+    <div id="selection-screen" class="screen">
+        <div class="selection-header">
+            <div class="progress-info">
+                <span id="photo-counter">1 / 1</span>
+            </div>
+        </div>
+        <div id="selection-image-container" class="selection-image-container">
+            <img id="selection-image" src="" alt="Foto">
+            <div class="selection-overlay">
+                <div class="reject-indicator">✗ Verwerfen</div>
+                <div class="keep-indicator">✓ Beibehalten</div>
+            </div>
+        </div>
+        <div class="selection-instructions">
+            <p>← Links: Verwerfen | Rechts: Beibehalten →</p>
+            <p>Oder wischen / neigen</p>
+        </div>
+    </div>
+
+    <!-- Overview Screen -->
+    <div id="overview-screen" class="screen">
+        <div class="overview-header">
+            <h2>Ausgewählte Fotos</h2>
+            <button id="back-overview-btn" class="back-button">← Zurück</button>
+        </div>
+        <div id="overview-grid" class="overview-grid"></div>
+        <button id="create-album-btn" class="create-button">Album erstellen</button>
+    </div>
+
+    <!-- Name Popup -->
+    <div id="name-popup" class="popup-overlay">
+        <div class="popup-content">
+            <h3>Album benennen</h3>
+            <input type="text" id="album-name-input" placeholder="Album Name" maxlength="50">
+            <div class="location-info">
+                <p><strong>Ort:</strong> <span id="location-display">Wird ermittelt...</span></p>
+            </div>
+            <div class="popup-buttons">
+                <button id="cancel-name-btn" class="cancel-btn">Abbrechen</button>
+                <button id="confirm-name-btn" class="confirm-btn">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slideshow Screen -->
+    <div id="slideshow-screen" class="screen">
+        <div class="slideshow-header">
+            <button id="back-slideshow-btn" class="back-button">← Zurück</button>
+            <h2 id="slideshow-title"></h2>
+        </div>
+        <div id="slideshow-container" class="slideshow-container">
+            <img id="slideshow-image" src="" alt="Slideshow">
+            <button id="prev-slide-btn" class="slide-nav prev">‹</button>
+            <button id="next-slide-btn" class="slide-nav next">›</button>
+        </div>
+        <div class="slideshow-info">
+            <span id="slide-counter">1 / 1</span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
