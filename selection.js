@@ -16,35 +16,46 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPhotos();
     displaySelectionPhoto();
     setupSelectionListeners();
-    requestOrientationPermission();
+    
+    // Check if permission was already granted in permissions page
+    const orientationPermission = localStorage.getItem('orientationPermission');
+    if (orientationPermission === 'granted' || typeof DeviceOrientationEvent === 'undefined' || typeof DeviceOrientationEvent.requestPermission !== 'function') {
+        // Permission already granted or not needed
+        setupOrientationListener();
+    } else {
+        // Need to request permission
+        requestOrientationPermission();
+    }
 });
 
 function requestOrientationPermission() {
     // Request permission for iOS 13+
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
         // Show a message or button to request permission
         const container = document.getElementById('selection-image-container');
         if (container) {
             const permissionMsg = document.createElement('div');
             permissionMsg.id = 'orientation-permission-msg';
-            permissionMsg.style.cssText = 'position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; z-index: 20; text-align: center; font-size: 0.9rem;';
+            permissionMsg.style.cssText = 'position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; z-index: 20; text-align: center; font-size: 0.9rem; cursor: pointer;';
             permissionMsg.innerHTML = 'Tippen Sie hier, um Neigungssteuerung zu aktivieren';
             permissionMsg.addEventListener('click', () => {
                 DeviceOrientationEvent.requestPermission()
                     .then(response => {
                         if (response === 'granted') {
                             permissionMsg.remove();
-                            if (window.setupOrientationAfterPermission) {
-                                window.setupOrientationAfterPermission();
-                            }
+                            localStorage.setItem('orientationPermission', 'granted');
+                            // Setup orientation listener after permission granted
+                            setupOrientationListener();
                         } else {
                             permissionMsg.textContent = 'Neigungssteuerung nicht verfügbar';
+                            localStorage.setItem('orientationPermission', 'denied');
                             setTimeout(() => permissionMsg.remove(), 2000);
                         }
                     })
                     .catch(err => {
                         console.error('Orientation permission error:', err);
                         permissionMsg.remove();
+                        localStorage.setItem('orientationPermission', 'denied');
                     });
             });
             container.appendChild(permissionMsg);
@@ -54,11 +65,10 @@ function requestOrientationPermission() {
                 }
             }, 5000);
         }
+    } else {
+        // Permission not needed, setup directly
+        setupOrientationListener();
     }
-}
-
-function setupOrientationListener() {
-    // This will be called after permission is granted or if not needed
 }
 
 function loadPhotos() {
@@ -217,18 +227,32 @@ function setupSelectionListeners() {
     selectionKeyHandler = handleSelectionKey;
     document.addEventListener('keydown', selectionKeyHandler);
     
-    // Device orientation (tilt sensor)
-    setupOrientationListener();
+    // Device orientation will be set up by requestOrientationPermission
 }
 
 function setupOrientationListener() {
-    if (!window.DeviceOrientationEvent) return;
+    if (typeof DeviceOrientationEvent === 'undefined') {
+        console.log('DeviceOrientationEvent not supported');
+        return;
+    }
+    
+    // Remove existing listener if any
+    if (selectionOrientationHandler) {
+        window.removeEventListener('deviceorientation', selectionOrientationHandler);
+    }
     
     let lastGamma = null;
     let tiltCooldown = false;
-    let tiltThreshold = 25; // Degrees of tilt needed
+    let tiltThreshold = 20; // Degrees of tilt needed (reduced for better sensitivity)
+    let lastUpdateTime = 0;
     
-    const orientationHandler = (e) => {
+    selectionOrientationHandler = (e) => {
+        const now = Date.now();
+        
+        // Throttle updates to every 100ms
+        if (now - lastUpdateTime < 100) return;
+        lastUpdateTime = now;
+        
         if (lastGamma === null) {
             lastGamma = e.gamma || 0;
             return;
@@ -251,25 +275,25 @@ function setupOrientationListener() {
             
             if (gammaDiff < -tiltThreshold) {
                 // Tilt left = reject
-                rejectIndicator.classList.add('show');
-                keepIndicator.classList.remove('show');
-                img.style.transform = 'translateX(-50px) rotate(-5deg)';
+                if (rejectIndicator) rejectIndicator.classList.add('show');
+                if (keepIndicator) keepIndicator.classList.remove('show');
+                if (img) img.style.transform = 'translateX(-50px) rotate(-5deg)';
                 
                 setTimeout(() => {
                     rejectPhoto();
-                    img.style.transform = '';
-                    rejectIndicator.classList.remove('show');
+                    if (img) img.style.transform = '';
+                    if (rejectIndicator) rejectIndicator.classList.remove('show');
                 }, 200);
             } else if (gammaDiff > tiltThreshold) {
                 // Tilt right = keep
-                keepIndicator.classList.add('show');
-                rejectIndicator.classList.remove('show');
-                img.style.transform = 'translateX(50px) rotate(5deg)';
+                if (keepIndicator) keepIndicator.classList.add('show');
+                if (rejectIndicator) rejectIndicator.classList.remove('show');
+                if (img) img.style.transform = 'translateX(50px) rotate(5deg)';
                 
                 setTimeout(() => {
                     keepPhoto();
-                    img.style.transform = '';
-                    keepIndicator.classList.remove('show');
+                    if (img) img.style.transform = '';
+                    if (keepIndicator) keepIndicator.classList.remove('show');
                 }, 200);
             }
             
@@ -277,24 +301,17 @@ function setupOrientationListener() {
             setTimeout(() => {
                 tiltCooldown = false;
                 lastGamma = gamma;
-            }, 800);
+            }, 600);
         } else {
-            lastGamma = gamma;
+            // Update lastGamma gradually to prevent drift
+            lastGamma = lastGamma * 0.9 + gamma * 0.1;
         }
     };
     
-    // Request permission if needed (iOS 13+)
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        // Permission will be requested via the permission message
-        window.setupOrientationAfterPermission = () => {
-            window.addEventListener('deviceorientation', orientationHandler);
-        };
-    } else {
-        // Permission not needed, setup directly
-        window.addEventListener('deviceorientation', orientationHandler);
-    }
+    // Add event listener
+    window.addEventListener('deviceorientation', selectionOrientationHandler);
     
-    selectionListenersSetup = true;
+    console.log('Orientation listener setup complete');
 }
 
 function handleSelectionKey(e) {

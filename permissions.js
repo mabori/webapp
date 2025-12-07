@@ -123,9 +123,11 @@ function requestOrientationPermission() {
             .then(response => {
                 if (response === 'granted') {
                     permissions.orientation.granted = true;
+                    localStorage.setItem('orientationPermission', 'granted');
                     updateOrientationStatus('granted');
                 } else {
                     permissions.orientation.granted = false;
+                    localStorage.setItem('orientationPermission', 'denied');
                     updateOrientationStatus('denied');
                 }
                 updateContinueButton();
@@ -133,12 +135,14 @@ function requestOrientationPermission() {
             .catch(error => {
                 console.error('Orientation permission error:', error);
                 permissions.orientation.granted = false;
+                localStorage.setItem('orientationPermission', 'denied');
                 updateOrientationStatus('denied');
                 updateContinueButton();
             });
     } else {
         // Permission not needed
         permissions.orientation.granted = true;
+        localStorage.setItem('orientationPermission', 'granted');
         updateOrientationStatus('granted');
         updateContinueButton();
     }
