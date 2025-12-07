@@ -165,9 +165,13 @@ function loadAlbums() {
     container.innerHTML = '';
     
     if (state.albums.length === 0) {
+        // No albums - show only empty state and plus button
         emptyState.style.display = 'flex';
+        container.style.display = 'none';
     } else {
+        // Albums exist - show albums, hide empty state
         emptyState.style.display = 'none';
+        container.style.display = 'grid';
         
         state.albums.forEach((album, index) => {
             const card = document.createElement('div');
