@@ -163,7 +163,7 @@ body {
 
 .camera-controls {
     position: absolute;
-    bottom: 30px;
+    bottom: calc(30px + env(safe-area-inset-bottom, 0px));
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -207,11 +207,11 @@ body {
 
 .photo-preview-container {
     position: absolute;
-    bottom: 120px;
-    left: 20px;
+    bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+    left: calc(20px + env(safe-area-inset-left, 0px));
     display: flex;
     gap: 10px;
-    max-width: calc(100% - 40px);
+    max-width: calc(100% - 40px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
     overflow-x: auto;
     z-index: 10;
 }
@@ -610,6 +610,14 @@ body {
     #home-screen {
         padding: 16px;
         padding-bottom: 90px;
+    }
+
+    .camera-controls {
+        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .photo-preview-container {
+        bottom: calc(100px + env(safe-area-inset-bottom, 0px));
     }
 }
 
