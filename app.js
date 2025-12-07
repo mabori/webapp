@@ -445,30 +445,37 @@ function loadAlbums() {
     }
     
     const container = document.getElementById('albums-container');
+    const emptyState = document.getElementById('empty-state');
     container.innerHTML = '';
     
-    state.albums.forEach((album, index) => {
-        const card = document.createElement('div');
-        card.className = 'album-card';
+    if (state.albums.length === 0) {
+        emptyState.style.display = 'flex';
+    } else {
+        emptyState.style.display = 'none';
         
-        const img = document.createElement('img');
-        img.src = album.photos[0] || '';
-        img.className = 'album-thumbnail';
-        img.alt = album.name;
-        
-        const name = document.createElement('div');
-        name.className = 'album-name';
-        name.textContent = album.name;
-        
-        card.appendChild(img);
-        card.appendChild(name);
-        
-        card.addEventListener('click', () => {
-            showSlideshow(index);
+        state.albums.forEach((album, index) => {
+            const card = document.createElement('div');
+            card.className = 'album-card';
+            
+            const img = document.createElement('img');
+            img.src = album.photos[0] || '';
+            img.className = 'album-thumbnail';
+            img.alt = album.name;
+            
+            const name = document.createElement('div');
+            name.className = 'album-name';
+            name.textContent = album.name;
+            
+            card.appendChild(img);
+            card.appendChild(name);
+            
+            card.addEventListener('click', () => {
+                showSlideshow(index);
+            });
+            
+            container.appendChild(card);
         });
-        
-        container.appendChild(card);
-    });
+    }
 }
 
 function saveAlbums() {
