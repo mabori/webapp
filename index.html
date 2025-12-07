@@ -2,10 +2,20 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=home.html">
+    <meta http-equiv="refresh" content="0; url=permissions.html">
     <title>Memorys - Weiterleitung</title>
 </head>
 <body>
-    <p>Weiterleitung zu <a href="home.html">home.html</a>...</p>
+    <p>Weiterleitung zu <a href="permissions.html">permissions.html</a>...</p>
+    <script>
+        // Check if permissions were already requested
+        const permissionsRequested = localStorage.getItem('permissionsRequested');
+        if (permissionsRequested === 'true') {
+            window.location.href = 'home.html';
+        } else {
+            window.location.href = 'permissions.html';
+        }
+    </script>
 </body>
 </html>
+

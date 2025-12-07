@@ -8,6 +8,13 @@ let state = {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if permissions were requested
+    const permissionsRequested = localStorage.getItem('permissionsRequested');
+    if (permissionsRequested !== 'true') {
+        window.location.href = 'permissions.html';
+        return;
+    }
+    
     loadAlbums();
     setupEventListeners();
     requestLocation();

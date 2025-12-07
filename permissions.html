@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Berechtigungen</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .permissions-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 40px 20px;
+            text-align: center;
+            background: #0a0a0a;
+            color: #e0e0e0;
+        }
+
+        .permissions-screen h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            color: #ffffff;
+        }
+
+        .permission-item {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .permission-item h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .permission-item p {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+            margin-bottom: 15px;
+        }
+
+        .permission-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-badge.granted {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .status-badge.denied {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        .status-badge.pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .request-btn {
+            background: #ffffff;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .request-btn:active {
+            transform: scale(0.95);
+        }
+
+        .request-btn:disabled {
+            background: #2a2a2a;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .continue-btn {
+            background: #ffffff;
+            color: #0a0a0a;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: transform 0.2s;
+        }
+
+        .continue-btn:active {
+            transform: scale(0.95);
+        }
+
+        .continue-btn:disabled {
+            background: #2a2a2a;
+            color: #666;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="permissions-screen">
+        <h1>Berechtigungen</h1>
+        
+        <div class="permission-item">
+            <h3>📷 Kamera</h3>
+            <p>Benötigt für das Aufnehmen von Fotos</p>
+            <div class="permission-status">
+                <span class="status-badge pending" id="camera-status">Ausstehend</span>
+                <button class="request-btn" id="request-camera-btn">Anfragen</button>
+            </div>
+        </div>
+
+        <div class="permission-item">
+            <h3>📍 Standort</h3>
+            <p>Für die automatische Ortsangabe in Alben</p>
+            <div class="permission-status">
+                <span class="status-badge pending" id="location-status">Ausstehend</span>
+                <button class="request-btn" id="request-location-btn">Anfragen</button>
+            </div>
+        </div>
+
+        <div class="permission-item">
+            <h3>📱 Neigungssensor</h3>
+            <p>Für die Steuerung durch Handy-Neigung</p>
+            <div class="permission-status">
+                <span class="status-badge pending" id="orientation-status">Ausstehend</span>
+                <button class="request-btn" id="request-orientation-btn">Anfragen</button>
+            </div>
+        </div>
+
+        <button class="continue-btn" id="continue-btn" disabled>Weiter</button>
+    </div>
+
+    <script src="permissions.js"></script>
+</body>
+</html>
+
